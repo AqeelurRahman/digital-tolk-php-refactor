@@ -1,45 +1,34 @@
-Do at least ONE of the following tasks: refactor is mandatory. Write tests is optional, will be good bonus to see it. 
-Please do not invest more than 2-4 hours on this.
-Upload your results to a Github repo, for easier sharing and reviewing.
+Code Refactoring for:
 
-Thank you and good luck!
+app/Http/Controllers/BookingController.php
+================================================================
 
+As I observed, we are following repository/service pattern, therefore the function(distanceFeed) should be moved to the respective service class
+i.e. DistanceRepository
 
-
-Code to refactor
-=================
-1) app/Http/Controllers/BookingController.php
-2) app/Repository/BookingRepository.php
-
-Code to write tests (optional)
-=====================
-3) App/Helpers/TeHelper.php method willExpireAt
-4) App/Repository/UserRepository.php, method createOrUpdate
+Also, the function has a larger cognitive complexity value because of using too much else if,
+I have broken down the functionality into two parts:
+1. Used default laravel validation to check for the correct data types. and put required attribute for the JobId.
+2. Used fall back (empty) values in the query, instead of encapsulating them into if else.
 
 
-----------------------------
 
-What I expect in your repo:
+Code Refactoring for:
 
-X. A readme with:   Your thoughts about the code. What makes it amazing code. Or what makes it ok code. Or what makes it terrible code. How would you have done it. Thoughts on formatting, structure, logic.. The more details that you can provide about the code (what's terrible about it or/and what is good about it) the easier for us to assess your coding style, mentality etc
+tests/app/Repository/UserRepository.php
+================================================================
+The class has one complex function that is performing multiple tasks:
 
-And 
+The createOrUpdate method performs multiple responsibilities such as validation, creating, and updating
+a user with additional responsibilities to create a Company, a Department, and a UserMeta depending on user role.
+so, it is violating the single responsibility principle.
 
-Y.  Refactor it if you feel it needs refactoring. The more love you put into it. The easier for us to asses your thoughts, code principles etc
-
-
-IMPORTANT: Make two commits. First commit with original code. Second with your refactor so we can easily trace changes. 
-
-
-NB: you do not need to set up the code on local and make the web app run. It will not run as its not a complete web app. This is purely to assess you thoughts about code, formatting, logic etc
+Also we can use the Laravel's mass assignment feature avoiding mulitple lines of assigning values to the model.
 
 
-===== So expected output is a GitHub link with either =====
+==================================================================
+As a conclusion we can make the code more readable and easily debuggable by making use of
+frameworks functionality and not writing function performing muliple tasks.
 
-1. Readme described above (point X above) + refactored code 
-OR
-2. Readme described above (point X above) + refactored core + a unit test of the code that we have sent
-
-Thank you!
-
-
+========================
+I have added a test class in the Helpers' folder for the method willExpireAt.
